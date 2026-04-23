@@ -4,6 +4,7 @@ import {
   PenTool,
   Target,
   ShieldCheck,
+  Library,
   type LucideIcon,
 } from "lucide-react";
 
@@ -56,5 +57,13 @@ export const MODULES: CitadelModule[] = [
     icon: ShieldCheck,
     description: "Disciplina y Hábitos",
     greek: "Ἐγκράτεια",
+  },
+  {
+    id: "alexandria",
+    name: "ALEXANDRIA",
+    href: "/alexandria",
+    icon: Library,
+    description: "Biblioteca de recursos curados",
+    greek: "Ἀλεξάνδρεια",
   },
 ];

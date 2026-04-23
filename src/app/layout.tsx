@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Cinzel, Montserrat } from "next/font/google";
+import { Cinzel } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
-});
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -23,7 +17,7 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: "CITADEL · Pensamiento · Disciplina · Legado",
   description:
-    "Suite táctica de herramientas personales para el AI Builder. Chronos · Oikos · Hypomnemata · Telos · Egkrateia.",
+    "Suite táctica de herramientas personales para el AI Builder. Chronos · Oikos · Hypomnemata · Telos · Egkrateia · Alexandria.",
 };
 
 export default function RootLayout({
@@ -34,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${montserrat.variable} ${cinzel.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${cinzel.variable} ${GeistMono.variable}`}
       suppressHydrationWarning
     >
       <body className="stoic-canvas relative min-h-screen font-sans antialiased">

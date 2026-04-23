@@ -1,5 +1,5 @@
-import { ModulePlaceholder } from "@/components/module-placeholder";
+import { HypomnemataModule } from "@/components/modules/Hypomnemata";
 
 export default function HypomnemataPage() {
-  return <ModulePlaceholder moduleId="hypomnemata" />;
+  return <HypomnemataModule />;
 }
