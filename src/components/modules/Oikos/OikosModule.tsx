@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -20,6 +19,7 @@ import {
 import { format, parseISO, startOfMonth, endOfMonth, isWithinInterval } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { usePortfolio } from "./usePortfolio";
 import type { Holding, LiveQuote, StockSearchResult, Transaction } from "./types";
 
@@ -177,18 +177,13 @@ function AddHoldingModal({
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/[0.08] bg-[#0d0d0f] shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 flex flex-col max-h-[90vh]">
-          <div className="flex shrink-0 items-center justify-between border-b border-white/[0.06] px-6 py-4">
-            <Dialog.Title className="text-base font-semibold text-zinc-50">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-md gap-0 rounded-xl p-0 flex flex-col">
+          <DialogHeader className="shrink-0 border-b border-white/[0.06] px-6 py-4 pr-12">
+            <DialogTitle>
               Agregar posición
-            </Dialog.Title>
-            <Dialog.Close className="rounded-md p-1 text-zinc-500 transition hover:text-zinc-200">
-              <X className="h-4 w-4" />
-            </Dialog.Close>
-          </div>
+            </DialogTitle>
+          </DialogHeader>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
           <div className="space-y-4">
@@ -274,9 +269,8 @@ function AddHoldingModal({
             </button>
           </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -326,18 +320,13 @@ function TransactionModal({
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/[0.08] bg-[#0d0d0f] shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 flex flex-col max-h-[90vh]">
-          <div className="flex shrink-0 items-center justify-between border-b border-white/[0.06] px-6 py-4">
-            <Dialog.Title className="text-base font-semibold text-zinc-50">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-md gap-0 rounded-xl p-0 flex flex-col">
+          <DialogHeader className="shrink-0 border-b border-white/[0.06] px-6 py-4 pr-12">
+            <DialogTitle>
               Movimiento · {holding.ticker}
-            </Dialog.Title>
-            <Dialog.Close className="rounded-md p-1 text-zinc-500 transition hover:text-zinc-200">
-              <X className="h-4 w-4" />
-            </Dialog.Close>
-          </div>
+            </DialogTitle>
+          </DialogHeader>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
           <div className="space-y-4">
@@ -424,9 +413,8 @@ function TransactionModal({
             </button>
           </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
 

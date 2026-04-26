@@ -75,6 +75,7 @@ function ToolbarButton({
 
 export function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Underline,
@@ -93,6 +94,11 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   });
 
   const [colorPickerOpen, setColorPickerOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!editor || editor.getHTML() === content) return;
+    editor.commands.setContent(content, { emitUpdate: false });
+  }, [content, editor]);
 
   if (!editor) return null;
 

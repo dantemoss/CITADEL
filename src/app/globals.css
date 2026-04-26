@@ -125,9 +125,16 @@
   mix-blend-mode: soft-light;
 }
 
-.stoic-canvas > * {
+.stoic-canvas > :not(.citadel-dialog-portal) {
   position: relative;
   z-index: 1;
+}
+
+.stoic-canvas > .citadel-dialog-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
 }
 
 @layer utilities {

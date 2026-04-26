@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { isSupabaseReady, supabase } from "@/lib/supabase";
 
 export type ResourceType =
   | "page"
@@ -24,22 +25,56 @@ export interface Resource {
   createdAt: string;
 }
 
-const STORAGE_KEY = "citadel:resources";
+type ResourceRow = {
+  id: string;
+  title: string;
+  url: string;
+  type: ResourceType;
+  description: string | null;
+  tags: string[] | null;
+  favicon: string | null;
+  thumbnail: string | null;
+  created_at: string;
+};
 
-function load(): Resource[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Resource[]) : [];
-  } catch {
-    return [];
-  }
+function fromRow(row: ResourceRow): Resource {
+  return {
+    id: row.id,
+    title: row.title,
+    url: row.url,
+    type: row.type,
+    description: row.description ?? "",
+    tags: row.tags ?? [],
+    favicon: row.favicon ?? "",
+    thumbnail: row.thumbnail ?? "",
+    createdAt: row.created_at,
+  };
 }
 
-function save(resources: Resource[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(resources));
-  } catch {}
+function toRow(resource: Resource): ResourceRow {
+  return {
+    id: resource.id,
+    title: resource.title,
+    url: resource.url,
+    type: resource.type,
+    description: resource.description,
+    tags: resource.tags,
+    favicon: resource.favicon,
+    thumbnail: resource.thumbnail,
+    created_at: resource.createdAt,
+  };
+}
+
+function toUpdateRow(patch: Partial<Omit<Resource, "id" | "createdAt">>) {
+  return {
+    ...(patch.title !== undefined && { title: patch.title }),
+    ...(patch.url !== undefined && { url: patch.url }),
+    ...(patch.type !== undefined && { type: patch.type }),
+    ...(patch.description !== undefined && { description: patch.description }),
+    ...(patch.tags !== undefined && { tags: patch.tags }),
+    ...(patch.favicon !== undefined && { favicon: patch.favicon }),
+    ...(patch.thumbnail !== undefined && { thumbnail: patch.thumbnail }),
+  };
 }
 
 export function useResources() {
@@ -47,42 +82,91 @@ export function useResources() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setResources(load());
-    setHydrated(true);
+    let cancelled = false;
+
+    async function loadResources() {
+      if (!isSupabaseReady || !supabase) {
+        console.warn("Supabase no está configurado. Los recursos no se cargarán.");
+        setHydrated(true);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("resources")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (cancelled) return;
+
+      if (error) {
+        console.error("Error cargando recursos desde Supabase:", error);
+        setResources([]);
+      } else {
+        setResources(((data ?? []) as ResourceRow[]).map(fromRow));
+      }
+
+      setHydrated(true);
+    }
+
+    loadResources();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const addResource = useCallback(
-    (resource: Omit<Resource, "id" | "createdAt">) => {
+    async (resource: Omit<Resource, "id" | "createdAt">) => {
+      if (!supabase) return null;
+
       const newResource: Resource = {
         ...resource,
         id: crypto.randomUUID(),
         createdAt: new Date().toISOString(),
       };
-      setResources((prev) => {
-        const next = [newResource, ...prev];
-        save(next);
-        return next;
-      });
-      return newResource;
+
+      const { data, error } = await supabase
+        .from("resources")
+        .insert(toRow(newResource))
+        .select("*")
+        .single();
+
+      if (error) {
+        console.error("Error creando recurso en Supabase:", error);
+        return null;
+      }
+
+      const saved = fromRow(data as ResourceRow);
+      setResources((prev) => [saved, ...prev]);
+      return saved;
     },
     []
   );
 
-  const removeResource = useCallback((id: string) => {
-    setResources((prev) => {
-      const next = prev.filter((r) => r.id !== id);
-      save(next);
-      return next;
-    });
+  const removeResource = useCallback(async (id: string) => {
+    if (!supabase) return;
+
+    setResources((prev) => prev.filter((r) => r.id !== id));
+
+    const { error } = await supabase.from("resources").delete().eq("id", id);
+    if (error) console.error("Error eliminando recurso en Supabase:", error);
   }, []);
 
   const updateResource = useCallback(
-    (id: string, patch: Partial<Omit<Resource, "id" | "createdAt">>) => {
+    async (id: string, patch: Partial<Omit<Resource, "id" | "createdAt">>) => {
+      if (!supabase) return;
+
       setResources((prev) => {
         const next = prev.map((r) => (r.id === id ? { ...r, ...patch } : r));
-        save(next);
         return next;
       });
+
+      const { error } = await supabase
+        .from("resources")
+        .update(toUpdateRow(patch))
+        .eq("id", id);
+
+      if (error) console.error("Error actualizando recurso en Supabase:", error);
     },
     []
   );

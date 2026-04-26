@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Palette } from "lucide-react";
+import { Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { RichTextEditor } from "./RichTextEditor";
 import type { Note, NoteColor } from "./useNotes";
 
@@ -46,12 +46,13 @@ export function NoteEditorModal({ open, onOpenChange, note, onSave }: NoteEditor
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/[0.08] bg-[#0d0d0f] shadow-2xl flex flex-col max-h-[90vh] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-2xl gap-0 rounded-2xl p-0 flex flex-col">
+          <DialogTitle className="sr-only">
+            {note ? "Editar idea" : "Nueva idea"}
+          </DialogTitle>
           {/* Header */}
-          <div className="flex shrink-0 items-center gap-3 border-b border-white/[0.06] px-6 py-4">
+          <div className="flex shrink-0 items-center gap-3 border-b border-white/[0.06] px-6 py-4 pr-14">
             <input
               ref={titleRef}
               type="text"
@@ -105,9 +106,6 @@ export function NoteEditorModal({ open, onOpenChange, note, onSave }: NoteEditor
                 </AnimatePresence>
               </div>
 
-              <Dialog.Close className="rounded-lg p-1.5 text-zinc-500 transition hover:text-zinc-200">
-                <X className="h-4 w-4" />
-              </Dialog.Close>
             </div>
           </div>
 
@@ -128,9 +126,9 @@ export function NoteEditorModal({ open, onOpenChange, note, onSave }: NoteEditor
                 : "Nueva idea"}
             </p>
             <div className="flex gap-2">
-              <Dialog.Close className="rounded-lg border border-white/[0.06] px-4 py-2 text-sm text-zinc-500 transition hover:text-zinc-200">
+              <DialogClose className="rounded-lg border border-white/[0.06] px-4 py-2 text-sm text-zinc-500 transition hover:text-zinc-200">
                 Cancelar
-              </Dialog.Close>
+              </DialogClose>
               <button
                 onClick={handleSave}
                 className="rounded-lg bg-[hsl(var(--oxido))] px-5 py-2 text-sm font-semibold text-white transition hover:brightness-110"
@@ -139,8 +137,7 @@ export function NoteEditorModal({ open, onOpenChange, note, onSave }: NoteEditor
               </button>
             </div>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }
