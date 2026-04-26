@@ -37,6 +37,8 @@ type ResourceRow = {
   created_at: string;
 };
 
+let resourcesCache: Resource[] | null = null;
+
 function fromRow(row: ResourceRow): Resource {
   return {
     id: row.id,
@@ -84,6 +86,11 @@ export function useResources() {
   useEffect(() => {
     let cancelled = false;
 
+    if (resourcesCache) {
+      setResources(resourcesCache);
+      setHydrated(true);
+    }
+
     async function loadResources() {
       if (!isSupabaseReady || !supabase) {
         console.warn("Supabase no está configurado. Los recursos no se cargarán.");
@@ -102,7 +109,9 @@ export function useResources() {
         console.error("Error cargando recursos desde Supabase:", error);
         setResources([]);
       } else {
-        setResources(((data ?? []) as ResourceRow[]).map(fromRow));
+        const loadedResources = ((data ?? []) as ResourceRow[]).map(fromRow);
+        resourcesCache = loadedResources;
+        setResources(loadedResources);
       }
 
       setHydrated(true);
@@ -137,7 +146,11 @@ export function useResources() {
       }
 
       const saved = fromRow(data as ResourceRow);
-      setResources((prev) => [saved, ...prev]);
+      setResources((prev) => {
+        const next = [saved, ...prev];
+        resourcesCache = next;
+        return next;
+      });
       return saved;
     },
     []
@@ -146,7 +159,11 @@ export function useResources() {
   const removeResource = useCallback(async (id: string) => {
     if (!supabase) return;
 
-    setResources((prev) => prev.filter((r) => r.id !== id));
+    setResources((prev) => {
+      const next = prev.filter((r) => r.id !== id);
+      resourcesCache = next;
+      return next;
+    });
 
     const { error } = await supabase.from("resources").delete().eq("id", id);
     if (error) console.error("Error eliminando recurso en Supabase:", error);
@@ -158,6 +175,7 @@ export function useResources() {
 
       setResources((prev) => {
         const next = prev.map((r) => (r.id === id ? { ...r, ...patch } : r));
+        resourcesCache = next;
         return next;
       });
 

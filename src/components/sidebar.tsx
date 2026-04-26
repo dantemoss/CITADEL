@@ -51,6 +51,7 @@ export function Sidebar() {
             <Link
               key={mod.id}
               href={mod.href}
+              prefetch={false}
               className={cn(
                 "group relative flex items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 transition-all duration-300 ease-out",
                 isActive

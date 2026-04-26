@@ -29,6 +29,8 @@ type NoteRow = {
   updated_at: string;
 };
 
+let notesCache: Note[] | null = null;
+
 function fromRow(row: NoteRow): Note {
   return {
     id: row.id,
@@ -78,6 +80,11 @@ export function useNotes() {
     let cancelled = false;
     const timers = moveTimers.current;
 
+    if (notesCache) {
+      setNotes(notesCache);
+      setHydrated(true);
+    }
+
     async function loadNotes() {
       if (!isSupabaseReady || !supabase) {
         console.warn("Supabase no está configurado. Las notas no se cargarán.");
@@ -96,7 +103,9 @@ export function useNotes() {
         console.error("Error cargando notas desde Supabase:", error);
         setNotes([]);
       } else {
-        setNotes(((data ?? []) as NoteRow[]).map(fromRow));
+        const loadedNotes = ((data ?? []) as NoteRow[]).map(fromRow);
+        notesCache = loadedNotes;
+        setNotes(loadedNotes);
       }
 
       setHydrated(true);
@@ -139,7 +148,11 @@ export function useNotes() {
       }
 
       const saved = fromRow(data as NoteRow);
-      setNotes((prev) => [saved, ...prev]);
+      setNotes((prev) => {
+        const next = [saved, ...prev];
+        notesCache = next;
+        return next;
+      });
       return saved;
     },
     []
@@ -154,6 +167,7 @@ export function useNotes() {
         const next = prev.map((n) =>
           n.id === id ? { ...n, ...nextPatch } : n
         );
+        notesCache = next;
         return next;
       });
 
@@ -186,6 +200,7 @@ export function useNotes() {
             oldNote.connections.length !== note.connections.length
         )
       );
+      notesCache = next;
       return next;
     });
 
@@ -223,6 +238,7 @@ export function useNotes() {
         };
         return updatedNote;
       });
+      notesCache = next;
       return next;
     });
 
@@ -245,6 +261,7 @@ export function useNotes() {
       const next = prev.map((n) =>
         n.id === id ? { ...n, posX, posY } : n
       );
+      notesCache = next;
       return next;
     });
 

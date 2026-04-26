@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TrendingUp,
@@ -433,6 +434,7 @@ function HoldingRow({
   onTransaction: () => void;
   onRemove: () => void;
 }) {
+  const [logoFailed, setLogoFailed] = React.useState(false);
   const price = quote?.price ?? holding.avgBuyPrice;
   const marketValue = holding.quantity * price;
   const costBasis = holding.quantity * holding.avgBuyPrice;
@@ -440,6 +442,10 @@ function HoldingRow({
   const pnlPct = costBasis > 0 ? (pnl / costBasis) * 100 : 0;
   const isUp = pnl >= 0;
   const dayChange = quote?.changePercent ?? 0;
+
+  React.useEffect(() => {
+    setLogoFailed(false);
+  }, [holding.logoUrl]);
 
   return (
     <motion.div
@@ -449,16 +455,21 @@ function HoldingRow({
     >
       {/* Logo */}
       <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-md bg-white/[0.05]">
-        <img
-          src={holding.logoUrl}
-          alt={holding.ticker}
-          className="h-6 w-6 object-contain"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = "none";
-            target.parentElement!.innerHTML = `<span class="font-mono text-[10px] font-bold text-zinc-400">${holding.ticker.slice(0, 3)}</span>`;
-          }}
-        />
+        {holding.logoUrl && !logoFailed ? (
+          <Image
+            src={holding.logoUrl}
+            alt={holding.ticker}
+            width={24}
+            height={24}
+            unoptimized
+            className="h-6 w-6 object-contain"
+            onError={() => setLogoFailed(true)}
+          />
+        ) : (
+          <span className="font-mono text-[10px] font-bold text-zinc-400">
+            {holding.ticker.slice(0, 3)}
+          </span>
+        )}
       </div>
 
       {/* Name */}
@@ -657,7 +668,7 @@ export function OikosModule() {
   const [activeTab, setActiveTab] = React.useState<"portfolio" | "transactions">("portfolio");
   const refreshRef = React.useRef<ReturnType<typeof setInterval>>();
 
-  async function fetchQuotes(holdingsList: Holding[]) {
+  const fetchQuotes = React.useCallback(async (holdingsList: Holding[]) => {
     if (holdingsList.length === 0) return;
     setQuotesLoading(true);
     try {
@@ -670,7 +681,12 @@ export function OikosModule() {
     } finally {
       setQuotesLoading(false);
     }
-  }
+  }, []);
+
+  const holdingsQuoteKey = React.useMemo(
+    () => holdings.map((h) => h.ticker).sort().join(","),
+    [holdings]
+  );
 
   React.useEffect(() => {
     if (!hydrated) return;
@@ -680,7 +696,7 @@ export function OikosModule() {
       refreshRef.current = setInterval(() => fetchQuotes(holdings), 30_000);
     }
     return () => clearInterval(refreshRef.current);
-  }, [hydrated, holdings.length]);
+  }, [fetchQuotes, holdings, holdingsQuoteKey, hydrated]);
 
   // ── Totals ──
   const totals = React.useMemo(() => {

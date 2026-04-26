@@ -1,12 +1,22 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { RichTextEditor } from "./RichTextEditor";
 import type { Note, NoteColor } from "./useNotes";
+
+const RichTextEditor = dynamic(
+  () => import("./RichTextEditor").then((mod) => mod.RichTextEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[250px] animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
+    ),
+  }
+);
 
 const COLOR_OPTIONS: { value: NoteColor; label: string; class: string }[] = [
   { value: "default", label: "Default", class: "bg-zinc-800 border-zinc-700" },

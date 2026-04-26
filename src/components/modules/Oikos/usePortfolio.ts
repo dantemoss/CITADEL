@@ -27,6 +27,9 @@ type TransactionRow = {
   created_at: string;
 };
 
+let holdingsCache: Holding[] | null = null;
+let transactionsCache: Transaction[] | null = null;
+
 function holdingFromRow(row: HoldingRow): Holding {
   return {
     id: row.id,
@@ -100,6 +103,12 @@ export function usePortfolio() {
   useEffect(() => {
     let cancelled = false;
 
+    if (holdingsCache && transactionsCache) {
+      setHoldings(holdingsCache);
+      setTransactions(transactionsCache);
+      setHydrated(true);
+    }
+
     async function loadPortfolio() {
       if (!isSupabaseReady || !supabase) {
         console.warn("Supabase no está configurado. El portfolio no se cargará.");
@@ -125,16 +134,20 @@ export function usePortfolio() {
         console.error("Error cargando holdings desde Supabase:", holdingsResult.error);
         setHoldings([]);
       } else {
-        setHoldings(((holdingsResult.data ?? []) as HoldingRow[]).map(holdingFromRow));
+        const loadedHoldings = ((holdingsResult.data ?? []) as HoldingRow[]).map(holdingFromRow);
+        holdingsCache = loadedHoldings;
+        setHoldings(loadedHoldings);
       }
 
       if (transactionsResult.error) {
         console.error("Error cargando movimientos desde Supabase:", transactionsResult.error);
         setTransactions([]);
       } else {
-        setTransactions(
-          ((transactionsResult.data ?? []) as TransactionRow[]).map(transactionFromRow)
+        const loadedTransactions = ((transactionsResult.data ?? []) as TransactionRow[]).map(
+          transactionFromRow
         );
+        transactionsCache = loadedTransactions;
+        setTransactions(loadedTransactions);
       }
 
       setHydrated(true);
@@ -169,7 +182,11 @@ export function usePortfolio() {
       }
 
       const saved = holdingFromRow(data as HoldingRow);
-      setHoldings((prev) => [...prev, saved]);
+      setHoldings((prev) => {
+        const next = [...prev, saved];
+        holdingsCache = next;
+        return next;
+      });
       return saved;
     },
     []
@@ -178,8 +195,16 @@ export function usePortfolio() {
   const removeHolding = useCallback(async (id: string) => {
     if (!supabase) return;
 
-    setHoldings((prev) => prev.filter((h) => h.id !== id));
-    setTransactions((prev) => prev.filter((t) => t.holdingId !== id));
+    setHoldings((prev) => {
+      const next = prev.filter((h) => h.id !== id);
+      holdingsCache = next;
+      return next;
+    });
+    setTransactions((prev) => {
+      const next = prev.filter((t) => t.holdingId !== id);
+      transactionsCache = next;
+      return next;
+    });
 
     const { error } = await supabase.from("portfolio_holdings").delete().eq("id", id);
     if (error) console.error("Error eliminando holding en Supabase:", error);
@@ -191,6 +216,7 @@ export function usePortfolio() {
 
       setHoldings((prev) => {
         const next = prev.map((h) => (h.id === id ? { ...h, ...patch } : h));
+        holdingsCache = next;
         return next;
       });
 
@@ -257,10 +283,16 @@ export function usePortfolio() {
       }
 
       const savedTxn = transactionFromRow(data as TransactionRow);
-      setTransactions((prev) => [savedTxn, ...prev]);
-      setHoldings((prev) =>
-        prev.map((h) => (h.id === updatedHolding.id ? updatedHolding : h))
-      );
+      setTransactions((prev) => {
+        const next = [savedTxn, ...prev];
+        transactionsCache = next;
+        return next;
+      });
+      setHoldings((prev) => {
+        const next = prev.map((h) => (h.id === updatedHolding.id ? updatedHolding : h));
+        holdingsCache = next;
+        return next;
+      });
 
       return savedTxn;
     },

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Library,
@@ -105,6 +106,8 @@ function ResourceCard({
 }) {
   const cfg = TYPE_CONFIG[resource.type];
   const TypeIcon = cfg.icon;
+  const [thumbnailFailed, setThumbnailFailed] = React.useState(false);
+  const [faviconFailed, setFaviconFailed] = React.useState(false);
 
   const domain = React.useMemo(() => {
     try {
@@ -113,6 +116,14 @@ function ResourceCard({
       return resource.url;
     }
   }, [resource.url]);
+
+  React.useEffect(() => {
+    setThumbnailFailed(false);
+  }, [resource.thumbnail]);
+
+  React.useEffect(() => {
+    setFaviconFailed(false);
+  }, [resource.favicon]);
 
   return (
     <motion.div
@@ -125,14 +136,15 @@ function ResourceCard({
     >
       {/* Thumbnail / header */}
       <div className="relative h-32 overflow-hidden bg-[#0a0a0b]">
-        {resource.thumbnail ? (
-          <img
+        {resource.thumbnail && !thumbnailFailed ? (
+          <Image
             src={resource.thumbnail}
             alt={resource.title}
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 100vw"
+            unoptimized
             className="h-full w-full object-cover opacity-70 transition-opacity group-hover:opacity-90"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
+            onError={() => setThumbnailFailed(true)}
           />
         ) : (
           <div className={cn("flex h-full items-center justify-center", cfg.bg)}>
@@ -175,15 +187,16 @@ function ResourceCard({
         </div>
 
         {/* Favicon */}
-        {resource.favicon && (
+        {resource.favicon && !faviconFailed && (
           <div className="absolute bottom-2 left-2">
-            <img
+            <Image
               src={resource.favicon}
               alt=""
+              width={16}
+              height={16}
+              unoptimized
               className="h-4 w-4 rounded-sm"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = "none";
-              }}
+              onError={() => setFaviconFailed(true)}
             />
           </div>
         )}
