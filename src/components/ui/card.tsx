@@ -4,6 +4,12 @@ import { cn } from "@/lib/utils";
 
 import { PremiumFrame } from "@/components/ui/premium-frame";
 
+/**
+ * Card — usa PremiumFrame (hoja de papel Dualite).
+ *
+ * Tipografía: títulos sutiles en sans 600 (no son hero). Para títulos
+ * editoriales grandes, usar directamente `<h1 className="font-serif">`.
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -20,7 +26,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6 pb-0", className)}
+    className={cn("flex flex-col gap-1.5 p-7 pb-3", className)}
     {...props}
   />
 ));
@@ -33,7 +39,7 @@ const CardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "font-sans text-base font-semibold leading-none tracking-tight text-foreground",
+      "font-sans text-base font-semibold leading-tight tracking-[0.01em] text-foreground",
       className
     )}
     {...props}
@@ -47,7 +53,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("font-sans text-sm text-muted-foreground", className)}
+    className={cn("font-sans text-sm leading-relaxed text-muted-foreground", className)}
     {...props}
   />
 ));
@@ -57,7 +63,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6", className)} {...props} />
+  <div ref={ref} className={cn("p-7 pt-0", className)} {...props} />
 ));
 CardContent.displayName = "CardContent";
 
@@ -67,7 +73,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center p-7 pt-0", className)}
     {...props}
   />
 ));

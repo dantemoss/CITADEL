@@ -3,126 +3,207 @@
 @tailwind utilities;
 
 /*
- * CITADEL — Sistema cromático
+ * CITADEL — Sistema cromático (Romanticism · Midnight Cobalt edition)
  *
- * Carbón suave  hsl(220 18% 6%)    (fondo principal)
- * Piedra        hsl(220 12% 12%)   (superficies, tarjetas)
- * Marfil tenue  hsl(36 18% 84%)    (texto claro, contraste cómodo)
- * Óxido         hsl(2 48% 38%)     (acento, primario)
- * Acero         hsl(220 6% 58%)    (texto secundario, muted)
+ * Inspiración:
+ *   · Catedral entre niebla — gris azulado profundo, atmosférico, pintado.
+ *   · Salón barroco bajo luz cobalto — azul ultramarino con destellos cyan.
+ *
+ * Acento de marca: Spray cyan (paleta completa en tailwind.config.ts).
+ *
+ * Reglas duras:
+ *   - NUNCA #FFFFFF ni #000000 (todo lleva un matiz frío azul cobalto).
+ *   - Todos los fondos respiran un gradiente sutil (vignette pintado).
+ *   - Contraste de texto >= 4.8:1 garantizado en ambos modos.
+ *   - Acento spray-400 sobre dark · spray-700 sobre light.
  */
 
 @layer base {
   :root {
-    /* Modo claro — marfil sobre piedra, acento óxido */
-    --background: 36 18% 91%;          /* marfil suave */
-    --foreground: 220 18% 12%;         /* carbón suavizado */
-    --card: 36 20% 95%;
-    --card-foreground: 220 18% 12%;
-    --popover: 36 20% 95%;
-    --popover-foreground: 220 18% 12%;
-    --primary: 2 48% 38%;              /* óxido menos agresivo */
-    --primary-foreground: 36 18% 91%;
-    --secondary: 36 14% 86%;
-    --secondary-foreground: 220 18% 14%;
-    --muted: 36 12% 86%;
-    --muted-foreground: 220 6% 42%;    /* acero legible */
-    --accent: 2 48% 38%;
-    --accent-foreground: 36 18% 91%;
-    --destructive: 2 48% 38%;
-    --destructive-foreground: 36 18% 91%;
-    --border: 36 10% 78%;
-    --input: 36 10% 78%;
-    --ring: 2 48% 38%;
-    --radius: 0.5rem;
+    /* ── Modo Aurora (claro · niebla fría sobre piedra azul) ────── */
+    --background: 210 28% 95%;          /* #ECF1F5 — niebla matinal */
+    --foreground: 215 38% 11%;          /* #121C2A — tinta cobalto */
 
-    /* Tokens de marca */
-    --carbon: 220 18% 6%;
-    --piedra: 220 12% 12%;
-    --marfil: 36 18% 84%;
-    --oxido: 2 48% 38%;
-    --acero: 220 6% 58%;
+    --card: 210 32% 97%;                /* #F4F7FA — piedra clara */
+    --card-foreground: 215 38% 11%;
+    --popover: 210 32% 98%;
+    --popover-foreground: 215 38% 11%;
+
+    --primary: 194 71% 31%;             /* spray-700 — CTA principal */
+    --primary-foreground: 210 28% 95%;
+    --secondary: 210 22% 90%;
+    --secondary-foreground: 215 38% 11%;
+
+    --muted: 210 22% 90%;
+    --muted-foreground: 215 16% 36%;    /* #4D5A6A — alto contraste, legible */
+
+    --accent: 193 80% 36%;              /* spray-600 — destellos sobre claro */
+    --accent-foreground: 210 28% 95%;
+    --destructive: 358 65% 46%;
+    --destructive-foreground: 210 28% 95%;
+
+    --border: 210 20% 82%;              /* #C7D0DA — borde visible sin gritar */
+    --input: 210 20% 82%;
+    --ring: 190 81% 43%;                /* spray-500 — focus */
+    --radius: 0.875rem;
+
+    /* Tono romántico: deep cobalt — usado en atmósferas/halos */
+    --cobalt: 215 50% 22%;              /* #1C3354 — azul Friedrich */
+    --cobalt-soft: 215 28% 78%;         /* niebla cobalto en claro */
+
+    /* Aliases legacy (módulos antiguos) */
+    --carbon: 215 38% 11%;
+    --piedra: 210 32% 97%;
+    --marfil: 215 38% 11%;
+    --oxido:  194 71% 31%;
+    --acero:  215 16% 36%;
+
+    /* Fuentes */
+    --font-display: var(--font-libre-caslon), Georgia, 'Times New Roman', serif;
+    --font-body:    var(--font-jakarta), 'Helvetica Neue', system-ui, sans-serif;
   }
 
   .dark {
-    /* Modo oscuro — identidad principal de la marca */
-    --background: 220 18% 6%;          /* carbón suave, no negro puro */
-    --foreground: 36 18% 84%;          /* marfil descansado */
-    --card: 220 12% 12%;               /* piedra */
-    --card-foreground: 36 18% 84%;
-    --popover: 220 12% 12%;
-    --popover-foreground: 36 18% 84%;
-    --primary: 2 48% 42%;              /* óxido con menos saturación */
-    --primary-foreground: 36 18% 88%;
-    --secondary: 220 12% 14%;
-    --secondary-foreground: 36 18% 84%;
-    --muted: 220 10% 14%;
-    --muted-foreground: 220 6% 58%;    /* acero */
-    --accent: 2 48% 42%;
-    --accent-foreground: 36 18% 88%;
-    --destructive: 2 48% 42%;
-    --destructive-foreground: 36 18% 88%;
-    --border: 220 10% 20%;
-    --input: 220 10% 20%;
-    --ring: 2 48% 42%;
+    /* ── Modo Catedral (oscuro · midnight cobalt pintado) ────────── */
+    --background: 215 32% 6%;           /* #0A1018 — noche profunda azul, NO #000 */
+    --foreground: 210 24% 94%;          /* #ECF0F4 — niebla luminosa, NO #FFF */
+
+    --card: 215 30% 10%;                /* #121A26 — superficie carta */
+    --card-foreground: 210 24% 94%;
+    --popover: 215 28% 13%;             /* #18222F */
+    --popover-foreground: 210 24% 94%;
+
+    --primary: 188 75% 53%;             /* spray-400 — CTA luminoso */
+    --primary-foreground: 215 38% 11%;
+    --secondary: 215 26% 15%;
+    --secondary-foreground: 210 24% 94%;
+
+    --muted: 215 26% 15%;
+    --muted-foreground: 210 18% 68%;    /* #9FAAB7 — sin gris ahogado */
+
+    --accent: 188 75% 53%;              /* spray-400 */
+    --accent-foreground: 215 38% 11%;
+    --destructive: 358 70% 56%;
+    --destructive-foreground: 215 38% 11%;
+
+    --border: 215 22% 19%;              /* #252F3D — divisores con peso */
+    --input: 215 22% 19%;
+    --ring: 188 75% 53%;
+
+    /* Cobalto profundo — atmósfera / vignette / halo de catedral */
+    --cobalt: 215 60% 18%;              /* #122749 — ultramar bajo vela */
+    --cobalt-soft: 215 35% 28%;         /* #2E4366 — bruma azul lejana */
+
+    /* Aliases legacy */
+    --carbon: 210 24% 94%;
+    --piedra: 215 30% 10%;
+    --marfil: 210 24% 94%;
+    --oxido:  188 75% 53%;
+    --acero:  210 18% 68%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    /*
+     * Suavizado tipográfico aplicado a TODO elemento.
+     * - Safari/Chrome (WebKit): antialiased en lugar de subpixel rendering,
+     *   mejora la legibilidad sobre fondos oscuros (catedral cobalto).
+     * - Firefox en macOS: grayscale, evita el bold-look del subpixel.
+     * - Edge/Chromium: text-rendering optimizeLegibility activa kerning + ligaduras.
+     * - font-synthesis: none evita que el navegador “invente” bold/italic
+     *   cuando una variante real no está cargada (calidad superior).
+     */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-synthesis: none;
   }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    font-family: var(--font-body);
+    /* Ligaduras estándar + contextual + alternativas estilísticas */
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "kern" 1;
+    font-kerning: normal;
+  }
+
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    /* Display serif: kerning óptico fino para títulos grandes */
+    font-feature-settings: "kern" 1, "liga" 1, "dlig" 1;
   }
 }
 
 /*
- * Lienzo estoico: fondo con viñeta de piedra sobre carbón
- * (inspirado en la dirección visual del manual de marca).
+ * Lienzo CITADEL — atmósfera pintada (Romanticismo).
+ *
+ * En oscuro: catedral bajo niebla nocturna — halo cobalto cenital + bruma
+ *            spray en el horizonte inferior izquierdo, viñeta a los lados.
+ * En claro:  niebla matinal — halo plateado arriba, gris azulado en los
+ *            bordes para dar profundidad sin enfriar el cuerpo.
  */
 .stoic-canvas {
   background-color: hsl(var(--background));
-  background-image: radial-gradient(
-    ellipse 120% 85% at 50% 0%,
-    hsl(30 10% 88%) 0%,
-    hsl(var(--background)) 58%
-  );
+  background-image:
+    radial-gradient(
+      ellipse 120% 70% at 50% -15%,
+      hsl(210 38% 98%) 0%,
+      hsl(var(--background)) 55%
+    ),
+    radial-gradient(
+      ellipse 50% 50% at 100% 100%,
+      hsl(var(--cobalt-soft) / 0.18) 0%,
+      transparent 70%
+    );
   background-attachment: fixed;
 }
 
 .dark .stoic-canvas {
-  background-color: hsl(var(--carbon));
+  background-color: hsl(var(--background));
   background-image:
     radial-gradient(
-      ellipse 90% 55% at 50% -10%,
-      hsl(2 32% 13%) 0%,
-      hsl(220 16% 8%) 38%,
-      hsl(var(--carbon)) 72%
+      ellipse 90% 60% at 50% -10%,
+      hsl(var(--cobalt)) 0%,
+      hsl(var(--background)) 60%
     ),
     radial-gradient(
-      ellipse 70% 50% at 80% 100%,
-      hsl(220 12% 10%) 0%,
-      transparent 60%
+      ellipse 50% 40% at 12% 100%,
+      hsl(195 40% 12%) 0%,
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 100% 110%,
+      hsl(var(--cobalt) / 0.45) 0%,
+      transparent 70%
     );
+  background-attachment: fixed;
 }
 
-/* Grano textura “piedra” muy sutil para romper el plano */
+/* Grano pictórico — refuerza textura de óleo */
 .stoic-canvas::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.92 0 0 0 0 0.89 0 0 0 0 0.85 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.12 0 0 0 0 0.20 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 .dark .stoic-canvas::before {
-  opacity: 0.06;
+  opacity: 0.07;
   mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.66 0 0 0 0 0.78 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 .stoic-canvas > :not(.citadel-dialog-portal) {
@@ -138,26 +219,196 @@
 }
 
 @layer utilities {
-  /* Línea fina decorativa, tipo página de manual */
   .hairline {
-    @apply border-black/[0.08] dark:border-white/[0.08];
+    @apply border-[hsl(var(--border))];
   }
 
-  /* Regla roja — marcador de sección como “01” en el manual */
   .rule-oxido {
-    background-color: hsl(var(--oxido));
+    background-color: hsl(var(--accent));
   }
 
-  /* Eyebrow label — tipografía secundaria en versalitas amplias */
+  /* Eyebrow */
   .eyebrow {
-    font-family: var(--font-sans), system-ui, sans-serif;
-    font-size: 0.625rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: hsl(var(--muted-foreground));
   }
 
+  /* Patrón diagonal — pinceladas finas */
+  .pattern-paper {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 9px,
+      hsl(var(--foreground) / 0.03) 9px,
+      hsl(var(--foreground) / 0.03) 10px
+    );
+  }
+
+  /* Velado romántico — gradiente vertical sobre superficie (ej. sidebar) */
+  .veil-vertical {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--cobalt) / 0.10) 0%,
+      transparent 22%,
+      transparent 78%,
+      hsl(var(--cobalt) / 0.08) 100%
+    );
+  }
+
+  .dark .veil-vertical {
+    background-image: linear-gradient(
+      180deg,
+      hsl(var(--cobalt) / 0.30) 0%,
+      transparent 22%,
+      transparent 78%,
+      hsl(var(--cobalt) / 0.22) 100%
+    );
+  }
+
+  /* Halo spray — destello en hover de tarjeta */
+  .glow-spray {
+    box-shadow:
+      0 0 0 1px hsl(var(--accent) / 0.18),
+      0 12px 40px -10px hsl(var(--accent) / 0.30);
+  }
+
+  /*
+   * Liquid Glass — botón cyan tenue estilo iOS 26.
+   *
+   * Composición:
+   *   1. Gradiente vertical muy traslúcido (claro arriba → oscuro abajo).
+   *   2. Borde con tinta cyan suave.
+   *   3. backdrop-filter: blur + saturate (efecto vidrio sobre cualquier fondo).
+   *   4. Inset shadows: highlight superior + sombra inferior que dan volumen.
+   *   5. Drop shadow exterior cyan muy lavado.
+   *
+   * Adaptable a ambos modos. Usar sobre cualquier fondo (oscuro o claro).
+   */
+  .liquid-glass {
+    position: relative;
+    isolation: isolate;
+    background-image: linear-gradient(
+      180deg,
+      hsl(188 90% 78% / 0.22) 0%,
+      hsl(190 80% 55% / 0.14) 55%,
+      hsl(195 80% 45% / 0.12) 100%
+    );
+    background-color: hsl(190 75% 55% / 0.04);
+    border: 1px solid hsl(188 80% 78% / 0.32);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 0 hsl(188 90% 92% / 0.45),
+      inset 0 -1px 0 0 hsl(195 50% 25% / 0.12),
+      0 8px 24px -8px hsl(190 80% 50% / 0.30),
+      0 1px 2px 0 hsl(195 60% 30% / 0.16);
+    color: hsl(190 90% 94%);
+    transition:
+      background-image 0.25s ease,
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      transform 0.18s ease;
+  }
+
+  .liquid-glass:hover {
+    background-image: linear-gradient(
+      180deg,
+      hsl(188 90% 82% / 0.30) 0%,
+      hsl(190 80% 55% / 0.20) 55%,
+      hsl(195 80% 45% / 0.16) 100%
+    );
+    border-color: hsl(188 80% 80% / 0.42);
+    box-shadow:
+      inset 0 1px 0 0 hsl(188 90% 95% / 0.55),
+      inset 0 -1px 0 0 hsl(195 50% 25% / 0.14),
+      0 12px 32px -8px hsl(190 80% 50% / 0.42),
+      0 1px 2px 0 hsl(195 60% 30% / 0.20);
+    transform: translateY(-1px);
+  }
+
+  .liquid-glass:active {
+    transform: translateY(0);
+    box-shadow:
+      inset 0 1px 0 0 hsl(188 90% 92% / 0.30),
+      inset 0 -1px 0 0 hsl(195 50% 25% / 0.18),
+      0 4px 12px -6px hsl(190 80% 50% / 0.28);
+  }
+
+  .liquid-glass:disabled,
+  .liquid-glass[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Variante para modo claro: tintes más profundos para mantener visibilidad
+   * sobre fondos pálidos. */
+  :root:not(.dark) .liquid-glass {
+    background-image: linear-gradient(
+      180deg,
+      hsl(190 70% 55% / 0.20) 0%,
+      hsl(193 75% 40% / 0.16) 55%,
+      hsl(198 70% 30% / 0.14) 100%
+    );
+    background-color: hsl(193 60% 45% / 0.06);
+    border: 1px solid hsl(193 60% 45% / 0.40);
+    color: hsl(200 70% 18%);
+    box-shadow:
+      inset 0 1px 0 0 hsl(188 90% 96% / 0.75),
+      inset 0 -1px 0 0 hsl(198 50% 25% / 0.12),
+      0 6px 18px -6px hsl(193 70% 38% / 0.28),
+      0 1px 2px 0 hsl(195 50% 35% / 0.14);
+  }
+
+  :root:not(.dark) .liquid-glass:hover {
+    background-image: linear-gradient(
+      180deg,
+      hsl(190 70% 55% / 0.28) 0%,
+      hsl(193 75% 40% / 0.22) 55%,
+      hsl(198 70% 30% / 0.18) 100%
+    );
+    border-color: hsl(193 60% 45% / 0.55);
+    box-shadow:
+      inset 0 1px 0 0 hsl(188 90% 96% / 0.85),
+      inset 0 -1px 0 0 hsl(198 50% 25% / 0.14),
+      0 10px 26px -8px hsl(193 70% 38% / 0.36),
+      0 1px 2px 0 hsl(195 50% 35% / 0.18);
+  }
+
+  /* Tamaños */
+  .liquid-glass-sm {
+    border-radius: 9999px;
+    padding: 0.5rem 0.9rem;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .liquid-glass-md {
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .liquid-glass-lg {
+    border-radius: 9999px;
+    padding: 0.75rem 1.5rem;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  /* Scrollbar */
   .scrollbar-stoic::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -166,16 +417,10 @@
     background: transparent;
   }
   .scrollbar-stoic::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.12);
+    background-color: hsl(var(--foreground) / 0.16);
     border-radius: 3px;
   }
   .scrollbar-stoic::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-  .dark .scrollbar-stoic::-webkit-scrollbar-thumb {
-    background-color: rgba(235, 229, 223, 0.08);
-  }
-  .dark .scrollbar-stoic::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(235, 229, 223, 0.18);
+    background-color: hsl(var(--foreground) / 0.32);
   }
 }

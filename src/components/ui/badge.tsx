@@ -3,23 +3,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Badge — etiqueta editorial Dualite.
+ *
+ * Bordes arena, fondos crema, tipografía sans 500 con tracking eyebrow.
+ * Variantes semánticas (success/warning/destructive) usan tintes muy lavados
+ * para mantenerse dentro del registro papel.
+ */
 const badgeVariants = cva(
-  "inline-flex items-center rounded-lg border border-black/[0.08] bg-zinc-100/80 px-2.5 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-zinc-800 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.9)] backdrop-blur-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 dark:border-white/[0.08] dark:bg-zinc-950/60 dark:text-zinc-200 dark:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)] dark:focus:ring-white/15 dark:focus:ring-offset-0 dark:focus:ring-offset-transparent",
+  "inline-flex items-center rounded-full border border-border bg-card px-3 py-1 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-foreground/15 focus:ring-offset-2 focus:ring-offset-background",
   {
     variants: {
       variant: {
         default:
-          "border-zinc-200 bg-zinc-900 text-zinc-50 shadow-none hover:bg-zinc-800 dark:border-white/[0.1] dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white",
+          "border-foreground/15 bg-foreground text-background hover:opacity-90",
         secondary:
-          "border-black/[0.06] bg-white/60 text-zinc-700 backdrop-blur-md dark:border-white/[0.06] dark:bg-zinc-950/50 dark:text-zinc-300",
+          "border-border bg-card text-muted-foreground",
         destructive:
-          "border-red-500/20 bg-red-950/50 text-red-100 hover:bg-red-950/70",
+          "border-destructive/25 bg-destructive/[0.08] text-destructive",
         success:
-          "border-emerald-600/20 bg-emerald-50/90 text-emerald-950 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.8)] dark:border-emerald-500/15 dark:bg-emerald-950/35 dark:text-emerald-100/95 dark:shadow-[inset_0_1px_0_0_rgba(52,211,153,0.12)]",
+          "border-emerald-700/20 bg-emerald-50 text-emerald-900 dark:border-emerald-400/30 dark:bg-emerald-500/10 dark:text-emerald-200",
         warning:
-          "border-amber-500/25 bg-amber-50 text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300",
+          "border-amber-700/25 bg-amber-50 text-amber-900 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-200",
         outline:
-          "border-black/[0.12] bg-transparent text-foreground dark:border-white/[0.1] dark:text-zinc-200",
+          "border-border bg-transparent text-foreground",
       },
     },
     defaultVariants: {

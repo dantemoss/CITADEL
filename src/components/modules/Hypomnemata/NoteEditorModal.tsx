@@ -141,7 +141,7 @@ export function NoteEditorModal({ open, onOpenChange, note, onSave }: NoteEditor
               </DialogClose>
               <button
                 onClick={handleSave}
-                className="rounded-lg bg-[hsl(var(--oxido))] px-5 py-2 text-sm font-semibold text-white transition hover:brightness-110"
+                className="liquid-glass liquid-glass-md"
               >
                 {note ? "Guardar cambios" : "Crear idea"}
               </button>

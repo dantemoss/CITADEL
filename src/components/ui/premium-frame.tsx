@@ -3,15 +3,26 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * PremiumFrame — marco tipo “placa” del manual de marca:
- * borde marfil muy tenue sobre piedra/carbón. En modo claro,
- * borde carbón tenue sobre marfil.
+ * PremiumFrame — “tabla pintada” Romanticismo · Midnight Cobalt.
+ *
+ * Antes era una hoja plana; ahora es una superficie con un gradiente
+ * vertical interno muy sutil (top ligeramente más claro, bottom más
+ * profundo) que da textura de óleo sin glassmorphism ni brillos.
+ *
+ * Estructura:
+ *   - Capa exterior: borde 1px + sombra paper.
+ *   - Capa interior: bg-card sobre gradiente lineal (sentido de luz).
+ *
+ * El gradiente usa solo tokens (--foreground/--card/--cobalt) → se
+ * adapta a ambos modos automáticamente.
  */
 const frame =
-  "rounded-xl bg-gradient-to-br from-carbon/10 via-carbon/[0.04] to-carbon/[0.02] p-px shadow-[0_0_0_1px_hsl(var(--carbon)_/_0.06)] dark:from-marfil/10 dark:via-marfil/[0.04] dark:to-marfil/[0.015] dark:shadow-[0_0_0_1px_hsl(var(--marfil)_/_0.04)]";
+  "relative rounded-[var(--radius)] border border-border bg-card shadow-paper transition-all duration-300";
 
 const fill =
-  "rounded-[11px] bg-card/90 backdrop-blur-md shadow-[inset_0_1px_0_0_hsl(var(--carbon)_/_0.05),inset_0_0_48px_hsl(var(--carbon)_/_0.02)] dark:bg-piedra/[0.78] dark:shadow-[inset_0_1px_0_0_hsl(var(--marfil)_/_0.055),inset_0_0_48px_hsl(var(--marfil)_/_0.018)]";
+  "relative rounded-[calc(var(--radius)-1px)] h-full min-h-0 overflow-hidden " +
+  "bg-[linear-gradient(180deg,hsl(var(--foreground)/0.02)_0%,transparent_42%,hsl(var(--cobalt)/0.05)_100%)] " +
+  "dark:bg-[linear-gradient(180deg,hsl(var(--foreground)/0.025)_0%,transparent_38%,hsl(var(--cobalt)/0.12)_100%)]";
 
 type PremiumFrameProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
@@ -21,7 +32,7 @@ export const PremiumFrame = React.forwardRef<HTMLDivElement, PremiumFrameProps>(
   function PremiumFrame({ className, children, ...props }, ref) {
     return (
       <div ref={ref} className={cn(frame, className)} {...props}>
-        <div className={cn(fill, "h-full min-h-0")}>{children}</div>
+        <div className={fill}>{children}</div>
       </div>
     );
   }

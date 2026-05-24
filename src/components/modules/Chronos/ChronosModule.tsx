@@ -4,6 +4,7 @@ import * as React from "react";
 import { format, parseISO } from "date-fns";
 import { Hourglass } from "lucide-react";
 
+import { FadeIn } from "@/components/motion";
 import { PremiumFrame } from "@/components/ui/premium-frame";
 
 import { LifeGrid } from "./LifeGrid";
@@ -36,7 +37,7 @@ export function ChronosModule({
   );
 
   return (
-    <section className="animate-in fade-in slide-in-from-bottom-2 mx-auto flex w-full max-w-[1180px] flex-col font-sans duration-500">
+    <FadeIn className="mx-auto flex w-full max-w-[1180px] flex-col font-sans">
       <PremiumFrame className="overflow-hidden rounded-[1.1rem] bg-gradient-to-br from-marfil/10 via-marfil/[0.035] to-marfil/[0.012] shadow-[0_0_0_1px_hsl(var(--marfil)_/_0.045),0_26px_90px_hsl(var(--carbon)_/_0.46)]">
         <div className="relative overflow-hidden rounded-[calc(1.1rem-1px)] bg-background px-5 py-5 text-marfil shadow-[inset_0_1px_0_hsl(var(--marfil)_/_0.035),inset_0_0_120px_hsl(var(--marfil)_/_0.012)] sm:px-6 sm:py-6">
           <div
@@ -89,7 +90,7 @@ export function ChronosModule({
           </div>
         </div>
       </PremiumFrame>
-    </section>
+    </FadeIn>
   );
 }
 

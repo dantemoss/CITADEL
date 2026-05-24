@@ -1,17 +1,24 @@
 import type { Metadata } from "next";
-import { Cinzel } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
+import { Libre_Caslon_Display, Plus_Jakarta_Sans } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 
+import { MotionProvider } from "@/components/motion";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
 
-const cinzel = Cinzel({
+const libreCaslon = Libre_Caslon_Display({
   subsets: ["latin"],
-  variable: "--font-serif",
+  variable: "--font-libre-caslon",
+  weight: ["400"],
   display: "swap",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -28,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${GeistSans.variable} ${cinzel.variable} ${GeistMono.variable}`}
+      className={`${jakarta.variable} ${libreCaslon.variable} ${GeistMono.variable}`}
       suppressHydrationWarning
     >
       <body className="stoic-canvas relative min-h-screen font-sans antialiased">
@@ -39,7 +46,7 @@ export default function RootLayout({
           storageKey="citadel-theme"
           disableTransitionOnChange
         >
-          {children}
+          <MotionProvider>{children}</MotionProvider>
         </ThemeProvider>
       </body>
     </html>

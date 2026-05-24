@@ -375,7 +375,7 @@ export function HypomnemataModule() {
                 y: 150 + Math.random() * 200,
               };
             }}
-            className="flex items-center gap-1.5 rounded-lg bg-[hsl(var(--oxido))] px-3 py-2 text-xs font-semibold text-white transition hover:brightness-110"
+            className="liquid-glass liquid-glass-sm inline-flex items-center gap-1.5"
           >
             <Plus className="h-3.5 w-3.5" />
             Nueva idea
@@ -498,10 +498,10 @@ export function HypomnemataModule() {
               }}
               title="Modo conexión"
               className={cn(
-                "flex h-7 w-7 items-center justify-center rounded-lg border transition",
+                "flex h-7 w-7 items-center justify-center rounded-lg transition",
                 connectMode
-                  ? "border-[hsl(var(--oxido))]/50 bg-[hsl(var(--oxido))]/20 text-[hsl(var(--oxido))]"
-                  : "border-white/[0.08] bg-black/60 text-zinc-400 hover:text-zinc-100"
+                  ? "liquid-glass"
+                  : "border border-white/[0.08] bg-black/60 text-zinc-400 hover:text-zinc-100"
               )}
             >
               <LinkIcon className="h-3.5 w-3.5" />

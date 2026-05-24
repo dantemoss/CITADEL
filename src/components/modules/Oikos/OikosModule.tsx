@@ -264,7 +264,7 @@ function AddHoldingModal({
             <button
               onClick={handleAdd}
               disabled={!selected || !quantity || !buyPrice}
-              className="mt-1 w-full rounded-lg bg-[hsl(var(--oxido))] py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+              className="liquid-glass liquid-glass-md mt-1 w-full justify-center"
             >
               Agregar al portfolio
             </button>
@@ -408,7 +408,7 @@ function TransactionModal({
             <button
               onClick={handleAdd}
               disabled={!quantity || !price}
-              className="mt-1 w-full rounded-lg bg-[hsl(var(--oxido))] py-2.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+              className="liquid-glass liquid-glass-md mt-1 w-full justify-center"
             >
               Registrar movimiento
             </button>
@@ -748,7 +748,7 @@ export function OikosModule() {
             </button>
             <button
               onClick={() => setAddOpen(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-[hsl(var(--oxido))] px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110"
+              className="liquid-glass liquid-glass-sm inline-flex items-center gap-1.5"
             >
               <Plus className="h-3.5 w-3.5" />
               Agregar posición
@@ -862,7 +862,7 @@ export function OikosModule() {
               </p>
               <button
                 onClick={() => setAddOpen(true)}
-                className="mt-2 flex items-center gap-2 rounded-lg bg-[hsl(var(--oxido))] px-4 py-2 text-sm font-semibold text-white transition hover:brightness-110"
+                className="liquid-glass liquid-glass-md mt-2 inline-flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Agregar primera posición
